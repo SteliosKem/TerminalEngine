@@ -1,32 +1,38 @@
 #include <Windows.h>
-#include <stdbool.h>
+#include "Application.h"
 
-const int WINDOW_WIDTH = 120;
-const int WINDOW_HEIGHT = 40;
+bool createApplication(Application* app) {
+    SetConsoleTitle(app->title);
+    return true;
+}
 
-int main() {
+bool runApplication(Application* app) {
     // 2D Array of unicode characters which acts as the screen buffer that will be printed on the console
-    wchar_t* screen = (wchar_t*) malloc(sizeof(wchar_t) * WINDOW_WIDTH * WINDOW_HEIGHT);
+    wchar_t* screen = (wchar_t*) malloc(sizeof(wchar_t) * app->screenWidth * app->screenHeight);
     // Create a handle to the console
     HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
     SetConsoleActiveScreenBuffer(hConsole);
     DWORD dwBytesWritten = 0;
 
+    // Game Loop
     while(true) {
         // Placeholder fill
-        for(int y = 0; y < WINDOW_HEIGHT; y++) {
-            for(int x = 0; x < WINDOW_WIDTH; x++) {
-                if(x < WINDOW_WIDTH / 2)
-                    screen[y*WINDOW_WIDTH + x] = '|';
+        for(int y = 0; y < app->screenHeight; y++) {
+            for(int x = 0; x < app->screenWidth; x++) {
+                if(x < app->screenWidth / 2)
+                    screen[y*app->screenWidth + x] = '|';
                 else
-                    screen[y*WINDOW_WIDTH + x] = '#';
+                    screen[y*app->screenWidth + x] = '#';
             }
         }
 
         // Null terminate
-        screen[WINDOW_WIDTH * WINDOW_HEIGHT - 1] = '\0';
+        screen[app->screenWidth * app->screenHeight - 1] = '\0';
         static const COORD topRight = {0, 0};
         // Output screen buffer to console
-        WriteConsoleOutputCharacterW(hConsole, screen, WINDOW_WIDTH * WINDOW_HEIGHT, topRight, &dwBytesWritten);
+        WriteConsoleOutputCharacterW(hConsole, screen, app->screenWidth * app->screenHeight, topRight, &dwBytesWritten);
     }
+
+    free(screen);
+    return true;
 }
