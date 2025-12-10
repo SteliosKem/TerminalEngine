@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include "Application.h"
+#include "Input.h"
 
 bool createApplication(Application* app) {
     SetConsoleTitle(app->title);
@@ -14,12 +15,20 @@ bool runApplication(Application* app) {
     SetConsoleActiveScreenBuffer(hConsole);
     DWORD dwBytesWritten = 0;
 
+    // Variable Declarations
+    float divisorPosition = 0;
+
+
     // Game Loop
     while(true) {
+        if(isKeyDown('D')) divisorPosition += 0.01f;
+        if(isKeyDown('A')) divisorPosition -= 0.01f;
+        if(divisorPosition > app->screenWidth || divisorPosition < 0) divisorPosition = 0;
+
         // Placeholder fill
         for(int y = 0; y < app->screenHeight; y++) {
             for(int x = 0; x < app->screenWidth; x++) {
-                if(x < app->screenWidth / 2)
+                if(x < divisorPosition)
                     screen[y*app->screenWidth + x] = '|';
                 else
                     screen[y*app->screenWidth + x] = '#';
