@@ -1,2 +1,2 @@
 # Battleships
-Retro-Style Παιχνίδι Ναυμαχιών ως Εργασία στον Δομημένο Προγραμματισμό
+Game Engine για Retro-Style Παιχνίδι σε Windows Terminal ως Εργασία στον Δομημένο Προγραμματισμό.
