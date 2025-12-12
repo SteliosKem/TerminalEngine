@@ -4,11 +4,27 @@
 #include <Windows.h>
 #include "TerminalEngine/Math.h"
 
+// ---- CAMERA ----
+
+typedef struct Camera {
+    float nearClip;
+    float farClip;
+    float fov;
+    float aspectRatio;
+    float fovRad;
+
+    Mat4 projectionMat;
+} Camera;
+
+
+// ---- RENDERER ----
+
 typedef struct Renderer {
     int screenWidth;
     int screenHeight;
     wchar_t* screen;
     HANDLE hConsole;
+    Camera camera;
 } Renderer;
 
 // Initializes the renderer struct.
@@ -31,6 +47,17 @@ typedef struct Fragment {
     Color color;
 } Fragment;
 
+
+// Holds the 3 points of a triangle
+typedef struct Triangle {
+    Vec3 points[3];
+} Triangle;
+
+// Dynamic Array of Triangles
+typedef struct Mesh {
+    Triangle* triangles;
+} Mesh;
+
 // Draw Commands
 
 // Clears the Screen Buffer.
@@ -41,5 +68,11 @@ void draw(Renderer* renderer, Fragment* frag);
 void drawSolid(Renderer* renderer, Vec2* point);
 // Draws a solid line from point a to point b.
 void drawLine(Renderer* renderer, Vec2* a, Vec2* b);
+// Draws a non-filled triangle with the three inputs as points.
+void drawTriangle(Renderer* renderer, Vec2* a, Vec2* b, Vec2* c);
+// Draws a non-filled triangle.
+void drawTriangle2(Renderer* renderer, Triangle* triangle);
+
+
 
 #endif

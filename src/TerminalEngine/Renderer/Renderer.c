@@ -6,6 +6,25 @@ void createRenderer(Renderer* renderer) {
     // Create a handle to the console
     renderer->hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
     SetConsoleActiveScreenBuffer(renderer->hConsole);
+
+    float nearC = 0.1f;
+    float farC = 1000.0f;
+    float aspectRatio = (float)renderer->screenHeight / (float)renderer->screenWidth;
+    float fov = 90.0f;
+    float fovRad = 1.0f / tanf(fov * 0.5f / 180.0f * PI);
+
+    renderer->camera.nearClip = nearC;
+    renderer->camera.farClip = farC;
+    renderer->camera.aspectRatio = aspectRatio;
+    renderer->camera.fov = fov;
+    renderer->camera.fovRad = fovRad;
+  
+    renderer->camera.projectionMat.mat[0][0] = aspectRatio * fovRad;
+    renderer->camera.projectionMat.mat[1][1] = fovRad;
+    renderer->camera.projectionMat.mat[2][2] = farC / (farC - nearC);
+    renderer->camera.projectionMat.mat[3][2] = (-nearC * farC) / (farC - nearC);
+    renderer->camera.projectionMat.mat[2][3] = 1.0f;
+    renderer->camera.projectionMat.mat[3][3] = 0.0f;
 }
 
 void clear(Renderer* renderer) {
@@ -54,7 +73,7 @@ void drawLine(Renderer* renderer, Vec2* a, Vec2* b) {
     int px = 2 * ady - adx;
     int py = 2 * adx - ady;
     
-    if(adx <= adx) {
+    if(ady <= adx) {
         if(dx >= 0) {
             currentPoint = *a;
             endPoint.x = b->x;
@@ -110,4 +129,17 @@ void drawLine(Renderer* renderer, Vec2* a, Vec2* b) {
             drawSolid(renderer, &currentPoint);
         }
     }
+}
+
+void drawTriangle(Renderer* renderer, Vec2* a, Vec2* b, Vec2* c) {
+    drawLine(renderer, a, b);
+    drawLine(renderer, a, c);
+    drawLine(renderer, b, c);
+}
+
+void drawTriangle2(Renderer* renderer, Triangle* triangle) {
+    Vec2 a = {triangle->points[0].x, triangle->points[0].y};
+    Vec2 b = {triangle->points[1].x, triangle->points[1].y};
+    Vec2 c = {triangle->points[2].x, triangle->points[2].y};
+    drawTriangle(renderer, &a, &b, &c);
 }
