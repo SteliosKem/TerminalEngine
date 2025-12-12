@@ -2,6 +2,7 @@
 #define TE_RENDERER_H
 
 #include <Windows.h>
+#include "TerminalEngine/Math.h"
 
 typedef struct Renderer {
     int screenWidth;
@@ -35,6 +36,7 @@ typedef struct Fragment {
 // Draws a single "pixel" (character) at specified location.
 void draw(Renderer* renderer, Fragment* frag);
 // Draws a solid (filled) character at specified location.
-void drawSolid(Renderer* renderer, int x, int y);
+void drawSolid(Renderer* renderer, Vec2* point);
+void drawLine(Renderer* renderer, Vec2* a, Vec2* b);
 
 #endif
