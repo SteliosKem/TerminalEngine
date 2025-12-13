@@ -143,3 +143,13 @@ void drawTriangle2(Renderer* renderer, Triangle* triangle) {
     Vec2 c = {triangle->points[2].x, triangle->points[2].y};
     drawTriangle(renderer, &a, &b, &c);
 }
+
+void drawText(Renderer* renderer, char* str, Vec2* pos) {
+    char* c = str;
+    int i = 0;
+    while(*c != '\0') {
+        renderer->screen[(int)pos->y * renderer->screenWidth + (int)pos->x + i] = *c;
+        i++;
+        c++;
+    }
+}

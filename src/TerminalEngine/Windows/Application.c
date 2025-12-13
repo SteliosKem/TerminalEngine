@@ -125,6 +125,9 @@ bool runApplication(Application* app) {
             drawTriangle(&renderer, &a, &b, &c);
         }
 
+        Vec2 textPos = { 70.0f, 40.0f };
+        drawText(&renderer, "Hello, World", &textPos);
+
         // End Scene
         render(&renderer);
     }
