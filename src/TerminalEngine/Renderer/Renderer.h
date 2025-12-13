@@ -14,6 +14,7 @@ typedef struct Camera {
     float fovRad;
 
     Mat4 projectionMat;
+    Vec3 pos;
 } Camera;
 
 

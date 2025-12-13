@@ -55,7 +55,7 @@ bool runApplication(Application* app) {
         int deltaTime = clock() - oldTime;
         oldTime = clock();
 
-        theta += deltaTime * 0.001f;
+        theta += deltaTime * 0.0008f;
         
 
         rot2.mat[0][0] = cos(theta);
@@ -96,33 +96,48 @@ bool runApplication(Application* app) {
             translatedTriangle.points[1].z += 2;
             translatedTriangle.points[2].z += 2;
 
-            matXvec(&renderer.camera.projectionMat, &translatedTriangle.points[0], &projectedTriangle.points[0]);
-            matXvec(&renderer.camera.projectionMat, &translatedTriangle.points[1], &projectedTriangle.points[1]);
-            matXvec(&renderer.camera.projectionMat, &translatedTriangle.points[2], &projectedTriangle.points[2]);
+            Vec3 normal, line1, line2;
+            subV3(&translatedTriangle.points[1], &translatedTriangle.points[0], &line1);
 
-            Vec2 a = {projectedTriangle.points[0].x, projectedTriangle.points[0].y};
-            Vec2 b = {projectedTriangle.points[1].x, projectedTriangle.points[1].y};
-            Vec2 c = {projectedTriangle.points[2].x, projectedTriangle.points[2].y};
+            subV3(&translatedTriangle.points[2], &translatedTriangle.points[0], &line2);
 
-            // Scale to Normalized Screen Space
-            a.x += 1.0f;
-            a.y += 1.0f;
+            cross(&line1, &line2, &normal);
+            normalize(&normal);
 
-            b.x += 1.0f;
-            b.y += 1.0f;
-    
-            c.x += 1.0f;
-            c.y += 1.0f;
+            Vec3 diff;
+            subV3(&translatedTriangle.points[0], &renderer.camera.pos, &diff);
 
-            a.x *= 0.5f * (float)renderer.screenWidth;
-            b.x *= 0.5f * (float)renderer.screenWidth;
-            c.x *= 0.5f * (float)renderer.screenWidth;
+            // Only draw if normal is facing the camera's direction
+            if(dot(&normal, &diff) < 0.0f) {
 
-            a.y *= 0.5f * (float)renderer.screenHeight;
-            b.y *= 0.5f * (float)renderer.screenHeight;
-            c.y *= 0.5f * (float)renderer.screenHeight;
+                matXvec(&renderer.camera.projectionMat, &translatedTriangle.points[0], &projectedTriangle.points[0]);
+                matXvec(&renderer.camera.projectionMat, &translatedTriangle.points[1], &projectedTriangle.points[1]);
+                matXvec(&renderer.camera.projectionMat, &translatedTriangle.points[2], &projectedTriangle.points[2]);
 
-            drawTriangle(&renderer, &a, &b, &c);
+                Vec2 a = {projectedTriangle.points[0].x, projectedTriangle.points[0].y};
+                Vec2 b = {projectedTriangle.points[1].x, projectedTriangle.points[1].y};
+                Vec2 c = {projectedTriangle.points[2].x, projectedTriangle.points[2].y};
+
+                // Scale to Normalized Screen Space
+                a.x += 1.0f;
+                a.y += 1.0f;
+
+                b.x += 1.0f;
+                b.y += 1.0f;
+        
+                c.x += 1.0f;
+                c.y += 1.0f;
+
+                a.x *= 0.5f * (float)renderer.screenWidth;
+                b.x *= 0.5f * (float)renderer.screenWidth;
+                c.x *= 0.5f * (float)renderer.screenWidth;
+
+                a.y *= 0.5f * (float)renderer.screenHeight;
+                b.y *= 0.5f * (float)renderer.screenHeight;
+                c.y *= 0.5f * (float)renderer.screenHeight;
+
+                drawTriangle(&renderer, &a, &b, &c);
+            }
         }
 
         Vec2 textPos = { 70.0f, 40.0f };

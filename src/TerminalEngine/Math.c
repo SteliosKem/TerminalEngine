@@ -2,17 +2,39 @@
 
 const float PI = 3.14159f;
 
+void addV3(Vec3* a, Vec3* b, Vec3* out) {
+    out->x = a->x + b->x;
+    out->y = a->y + b->y;
+    out->z = a->z + b->z;
+}
+
+void subV3(Vec3* a, Vec3* b, Vec3* out) {
+    out->x = a->x - b->x;
+    out->y = a->y - b->y;
+    out->z = a->z - b->z;
+}
+
+void mulV3(float a, Vec3* v, Vec3* out) {
+    out->x = a * v->x;
+    out->y = a * v->y;
+    out->z = a * v->z;
+}
+
 void cross(Vec3* a, Vec3* b, Vec3* c) {
     c->x = a->y * b->z - a->z * b->y;
     c->y = a->z * b->x - a->x * b->z;
     c->z = a->x * b->y - a->y * b->x;
 }
 
+float dot(Vec3* a, Vec3* b) {
+    return a->x * b->x + a->y * b->y + a->z * b->z;
+}
+
 void normalize(Vec3* in) {
-    float invLen = 1 / sqrtf(in->x * in->x + in->y * in->y + in->z * in->z);
-    in->x = invLen * in->x;
-    in->y = invLen * in->y;
-    in->z = invLen * in->z;
+    float invLen = 1 / sqrtf(dot(in, in));
+    in->x *= invLen;
+    in->y *= invLen;
+    in->z *= invLen;
 }
 
 void matXvec(Mat4* matrix, Vec3* in, Vec3* out) {

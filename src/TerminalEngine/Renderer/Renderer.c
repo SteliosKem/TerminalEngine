@@ -25,6 +25,8 @@ void createRenderer(Renderer* renderer) {
     renderer->camera.projectionMat.mat[3][2] = (-nearC * farC) / (farC - nearC);
     renderer->camera.projectionMat.mat[2][3] = 1.0f;
     renderer->camera.projectionMat.mat[3][3] = 0.0f;
+
+    renderer->camera.pos = (Vec3){0, 0, 0};
 }
 
 void clear(Renderer* renderer) {
